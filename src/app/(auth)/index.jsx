@@ -3,24 +3,28 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "react-native";
 import imagePath from "../../constants/imagePath";
-import {verticalScale, moderateScale } from "react-native-size-matters";
+import { verticalScale, moderateScale } from "react-native-size-matters";
 import { router } from "expo-router";
 
 const Auth = () => {
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-    let navigateToWelcome = () => {
-        router.push("/(auth)/termsAgree")
+  let navigateToWelcome = () => {
+    router.push("/(auth)/termsAgree");
+  };
+
+  let loadingTime = () => {
+    setIsLoading(true);
+    setTimeout(navigateToWelcome, 3000);
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(loadingTime, 2000);
+
+    return () => {
+        clearTimeout(timeout);
     }
-
-    let loadingTime = () => {
-        setIsLoading(true)
-        setTimeout(navigateToWelcome,3000)
-    }
-
-    useEffect(()=>{
-        setTimeout(loadingTime,2000)
-    },[])
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}></View>
@@ -33,19 +37,17 @@ const Auth = () => {
         <Text style={styles.whatsAppText}>WhatsApp</Text>
       </View>
       <View style={styles.footer}>
-        {
-            isLoading ? (
-                <>
-                    <ActivityIndicator size={moderateScale(48)} color={"#0CCC83"}/>
-                    <Text style={styles.loadingText}>Loading...</Text>
-                </>
-            ) : (
-                <>
-                <Text style={styles.fromText}>From</Text>
-                <Text style={styles.facebookText}>FACEBOOK</Text>
-                </>
-            )
-        }
+        {isLoading ? (
+          <>
+            <ActivityIndicator size={moderateScale(48)} color={"#0CCC83"} />
+            <Text style={styles.loadingText}>Loading...</Text>
+          </>
+        ) : (
+          <>
+            <Text style={styles.fromText}>From</Text>
+            <Text style={styles.facebookText}>FACEBOOK</Text>
+          </>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: "center",
     height: verticalScale(80),
-    justifyContent:"flex-end"
+    justifyContent: "flex-end",
   },
   fromText: {
     fontSize: moderateScale(12),
@@ -75,6 +77,8 @@ const styles = StyleSheet.create({
   facebookText: {
     fontSize: moderateScale(15),
     color: "#000",
+    textTransform:'uppercase',
+        fontWeight:600
   },
   logo: {
     width: moderateScale(70),
