@@ -3,8 +3,12 @@ import React from 'react'
 import { moderateScale, verticalScale } from 'react-native-size-matters'
 import imagePath from '../../constants/imagePath'
 import ButtonComp from '../../components/atoms/ButtonComp'
+import { router } from 'expo-router'
 
 const TermsAgree = () => {
+    const onAgree = () => {
+        router.push("(auth)/login")
+    }
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -12,7 +16,9 @@ const TermsAgree = () => {
             <Image source={imagePath.welcome} style={styles.welcomeImage} resizeMode='cover'/>
             <Text style={styles.descriptionText}>Read our <Text style={styles.linkText}>Privacy Policy.</Text> Tap “Agree and continue” to 
             accept the <Text style={styles.linkText}>Teams of Service.</Text></Text>
-            <ButtonComp title="AGREE AND CONTINUE" />
+            <View style={{width:moderateScale(300)}}>
+                <ButtonComp title="AGREE AND CONTINUE" onPress={onAgree}/>
+                </View>
         </View>
         <View style={styles.footer}>
             <Text style={styles.fromText}>From</Text>
@@ -51,7 +57,8 @@ const styles = StyleSheet.create({
     welcomeText:{
         fontSize:moderateScale(30),
         color:'#000',
-        fontWeight:"bold"
+        fontWeight:"bold",
+        marginBottom:verticalScale(10)
     },
     welcomeImage:{
       width:moderateScale(250),
