@@ -1,13 +1,29 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import ButtonComp from "../../components/atoms/ButtonComp";
 import { AntDesign } from "@expo/vector-icons";
+import { router } from "expo-router";
+import CountryPicker from "react-native-country-picker-modal";
 
 const Login = () => {
+  const [visible, setVisible] = useState("false");
+  const [countryName, setCountryName] = useState("India");
+  const [countryCode, setCountryCode] = useState("+91");
+  const [buttonPlace, setButtonPlace] = useState(false)
+
+  const onNextButtonClick = () => {
+    router.push("/(auth)/verifyOtp");
+  };
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, buttonPlace && styles.alternateContainer]}>
       <View style={styles.header}>
         <View style={styles.headingContainer}>
           <Text style={styles.heading}>Enter your phone number</Text>
@@ -17,31 +33,56 @@ const Login = () => {
           </Text>
         </View>
         <View style={styles.inputMainContainer}>
-          <View style={styles.dropDownContainer}>
+          <TouchableOpacity
+            style={styles.dropDownContainer}
+            onPress={() => setVisible(true)}
+          >
             <View />
-            <Text style={styles.dropDownTitle}>India</Text>
+            <Text style={styles.dropDownTitle}>{countryName}</Text>
             <AntDesign
               name="caretdown"
               size={moderateScale(14)}
               color="black"
             />
-          </View>
+          </TouchableOpacity>
           <View style={styles.horizontalLine} />
-         <View style={styles.inputContainer}>
-          <View style={styles.countryCode}>
-            <Text style={styles.countryCodeText}>+ 91</Text>
-            <View style={styles.horizontalLine} />
+          <View style={styles.inputContainer}>
+            <View style={styles.countryCode}>
+              <Text style={styles.countryCodeText}>{countryCode}</Text>
+              <View style={styles.horizontalLine} />
+            </View>
+            <View style={{ gap: verticalScale(10), flex: 1 }}>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter Your Phone Number"
+                keyboardType="number-pad"
+                maxLength={10}
+                onFocus={() => setButtonPlace(true)}
+              />
+              <View style={styles.horizontalLine} />
+            </View>
           </View>
-          <View style={{gap:verticalScale(10),flex:1}}>
-          <TextInput style={styles.input} placeholder="Enter Your Phone Number"/>
-          <View style={styles.horizontalLine} />
-          </View>
-         </View>
         </View>
       </View>
       <View style={styles.footer}>
-        <ButtonComp title="Next" style={{ paddingHorizontal: scale(29) }} />
+        <ButtonComp
+          title="Next"
+          
+          style={[styles.nextButton, buttonPlace && styles.nextButtonAlternate]}
+          onPress={onNextButtonClick}
+        />
       </View>
+      {visible && (
+        <CountryPicker  
+        visible={true} 
+        withFilter
+        onClose={() => setVisible(false)} 
+        onSelect={(e)=> {
+          setCountryCode(" + " + e.callingCode[0] + " ")
+          setCountryName(e.name)
+        }}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -54,6 +95,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: scale(40),
   },
+  alternateContainer:{
+    lex: 1,
+    justifyContent: "flex-start",
+    paddingVertical: verticalScale(50),
+    alignItems: "center",
+    paddingHorizontal: scale(40),
+  },
   header: {
     gap: verticalScale(50),
   },
@@ -62,7 +110,6 @@ const styles = StyleSheet.create({
   },
   inputMainContainer: {},
   inputContainer: {
-    
     paddingVertical: verticalScale(12),
     flexDirection: "row",
     alignItems: "center",
@@ -106,16 +153,22 @@ const styles = StyleSheet.create({
     color: "black",
   },
   input: {
-    fontSize:moderateScale(16)
+    fontSize: moderateScale(16),
   },
   countryCodeText: {
     fontSize: moderateScale(16),
     fontWeight: "500",
     color: "black",
   },
-  numberInput:{
+  numberInput: {
     gap: verticalScale(10),
-    width:"100%"
+    width: "100%",
+  },
+  nextButton:{
+    paddingHorizontal:scale(29)
+  },
+  nextButtonAlternate:{
+    marginVertical:verticalScale(50)
   }
 });
 
