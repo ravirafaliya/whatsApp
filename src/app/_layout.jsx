@@ -1,7 +1,15 @@
+if (typeof window !== "undefined") {
+  if (!window.addEventListener) {
+    window.addEventListener = () => {};
+  }
+  if (!window.removeEventListener) {
+    window.removeEventListener = () => {};
+  }
+}
+
 import React, { useEffect, useState } from "react";
 import { Redirect, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { use } from "react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -13,7 +21,7 @@ const RootLayout = () => {
   }, []);
   return (
     <>
-    <Stack screenOptions={{headerShown:false}}/>
+      <Stack screenOptions={{ headerShown: false }} />
       {isLogIn ? <Redirect href={"/(main)"} /> : <Redirect href={"/(auth)"} />}
     </>
   );
