@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,13 +18,46 @@ const Login = () => {
   const [visible, setVisible] = useState("false");
   const [countryName, setCountryName] = useState("India");
   const [countryCode, setCountryCode] = useState("+91");
-  const [buttonPlace, setButtonPlace] = useState(false)
+  const [buttonPlace, setButtonPlace] = useState(false);
+  const [error, setError] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const onNextButtonClick = () => {
-    router.push("/(auth)/verifyOtp");
+  const handleInputChange = (text) => {
+    if (/^\d{0,10}$/.test(text)) {
+      setPhoneNumber(text);
+    }
   };
+
+  const validatePhoneNumber = () => {
+    if (phoneNumber.trim() === "") {
+      setError("Phone number is required");
+      setModalVisible(true);
+      return false;
+    } else if (phoneNumber.length !== 10) {
+      setError("Phone number must be 10 digits");
+      setModalVisible(true);
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (validatePhoneNumber()) {
+      router.push("/(auth)/verifyOtp");
+    }
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setError("");
+  };
+
   return (
-    <SafeAreaView style={[styles.container, buttonPlace && styles.alternateContainer]}>
+    <SafeAreaView
+      style={[styles.container, buttonPlace && styles.alternateContainer]}
+    >
       <View style={styles.header}>
         <View style={styles.headingContainer}>
           <Text style={styles.heading}>Enter your phone number</Text>
@@ -57,8 +91,12 @@ const Login = () => {
                 placeholder="Enter Your Phone Number"
                 keyboardType="number-pad"
                 maxLength={10}
+                value={phoneNumber}
+                onChangeText={handleInputChange}
+                onBlur={validatePhoneNumber}
                 onFocus={() => setButtonPlace(true)}
               />
+
               <View style={styles.horizontalLine} />
             </View>
           </View>
@@ -67,20 +105,37 @@ const Login = () => {
       <View style={styles.footer}>
         <ButtonComp
           title="Next"
-          
           style={[styles.nextButton, buttonPlace && styles.nextButtonAlternate]}
-          onPress={onNextButtonClick}
+          onPress={handleSubmit}
         />
       </View>
+
+      {/* Error Modal */}
+      <Modal
+        transparent
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalInnerContainer}>
+            <Text style={styles.modalText}>{error}</Text>
+            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       {visible && (
-        <CountryPicker  
-        visible={true} 
-        withFilter
-        onClose={() => setVisible(false)} 
-        onSelect={(e)=> {
-          setCountryCode(" + " + e.callingCode[0] + " ")
-          setCountryName(e.name)
-        }}
+        <CountryPicker
+          visible={true}
+          withFilter
+          onClose={() => setVisible(false)}
+          onSelect={(e) => {
+            setCountryCode(" + " + e.callingCode[0] + " ");
+            setCountryName(e.name);
+          }}
         />
       )}
     </SafeAreaView>
@@ -95,7 +150,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: scale(40),
   },
-  alternateContainer:{
+  alternateContainer: {
     lex: 1,
     justifyContent: "flex-start",
     paddingVertical: verticalScale(50),
@@ -164,12 +219,38 @@ const styles = StyleSheet.create({
     gap: verticalScale(10),
     width: "100%",
   },
-  nextButton:{
-    paddingHorizontal:scale(29)
+  nextButton: {
+    paddingHorizontal: scale(29),
   },
-  nextButtonAlternate:{
-    marginVertical:verticalScale(50)
-  }
+  nextButtonAlternate: {
+    marginVertical: verticalScale(50),
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalInnerContainer: {
+    backgroundColor: "white",
+    padding: moderateScale(20),
+    borderRadius: moderateScale(10),
+    alignItems: "center",
+    width: 250,
+  },
+  modalText: {
+    color: "red",
+    fontSize: moderateScale(16),
+    marginBottom: verticalScale(10),
+  },
+  modalButton: {
+    backgroundColor: "red",
+    padding: verticalScale(10),
+    borderRadius: moderateScale(5),
+    width: "100%",
+    alignItems: "center",
+  },
+  modalButtonText: { color: "white", fontWeight: "bold" },
 });
 
 export default Login;

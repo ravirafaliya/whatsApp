@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#fff',
         alignContent:'center',
         justifyContent:'space-between',
-        paddingVertical:verticalScale(84),
+        paddingVertical:verticalScale(84), 
         paddingHorizontal:moderateScale(30)
     },
     header:{
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
         fontSize:moderateScale(15),
         color:'#000',
         textTransform:'uppercase',
-        fontWeight:600
+        fontWeight:"600"
     },
     welcomeText:{
         fontSize:moderateScale(30),

@@ -4,16 +4,21 @@ import ButtonComp from "../../components/atoms/ButtonComp";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { AntDesign } from "@expo/vector-icons";
 import OTPInput from "@codsod/react-native-otp-input";
+import { router } from "expo-router";
 
 const VerifyOtp = () => {
   const [otp, setOTP] = useState("");
   
   const onPress = () => {}
+
+  const returnToLodIn = () => {
+    router.push("/(auth)/login")
+  }
     
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.head}>
-        <AntDesign name="arrowleft" style={styles.backButton} />
+        <AntDesign name="arrowleft" style={styles.backButton} onPress={returnToLodIn}/>
         <Text style={styles.headTitle}>Enter OTP Code</Text>
       </View>
       <View style={styles.body}>
