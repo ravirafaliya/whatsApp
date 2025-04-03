@@ -4,7 +4,9 @@ import { Stack } from 'expo-router'
 
 const MainStack = () => {
   return (
-    <Stack></Stack>
+    <Stack screenOptions={{headerShown:false}}>
+      <Stack.Screen name='index' />
+    </Stack>
   )
 }
 

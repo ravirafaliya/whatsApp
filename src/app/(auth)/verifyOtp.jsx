@@ -5,11 +5,14 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { AntDesign } from "@expo/vector-icons";
 import OTPInput from "@codsod/react-native-otp-input";
 import { router } from "expo-router";
+import { storage } from "@/src/utils/utils";
 
 const VerifyOtp = () => {
   const [otp, setOTP] = useState("");
   
-  const onPress = () => {}
+  const onPress = () => {
+    storage.set("access_token","hdfhjlshfodshnf")
+  }
 
   const returnToLodIn = () => {
     router.push("/(auth)/login")
